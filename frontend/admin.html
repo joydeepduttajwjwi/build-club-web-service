@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Build Club</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fff8fb;
+      --surface: #ffffff;
+      --surface-soft: #fff0f6;
+      --surface-mint: #edfdf7;
+      --surface-sky: #eef8ff;
+      --border: #f2d7e4;
+      --text: #372b35;
+      --muted: #82717c;
+      --accent: #d86fa2;
+      --accent-strong: #b84f83;
+      --mint: #45b995;
+      --sky: #5aa9d6;
+      --danger: #d95d64;
+      --shadow: 0 18px 50px rgba(188, 94, 139, 0.14);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: "DM Sans", sans-serif; }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    #loginPage {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(216,111,162,0.18), transparent 28%),
+        radial-gradient(circle at 86% 12%, rgba(90,169,214,0.15), transparent 24%),
+        linear-gradient(135deg, #fff8fb, #f3fff9);
+    }
+    .login-card {
+      width: min(430px, 100%);
+      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+    }
+    .brand { font-family: Syne, sans-serif; font-size: 28px; font-weight: 800; letter-spacing: 0; }
+    .brand span { color: var(--accent); }
+    .sub { color: var(--muted); font-size: 14px; margin-top: 8px; line-height: 1.5; }
+
+    .form-grid { display: grid; gap: 16px; }
+    .field { display: grid; gap: 7px; }
+    .field label { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+    .input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 11px 13px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    textarea { min-height: 96px; resize: vertical; }
+    .input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(216,111,162,.12); }
+    .hint { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      color: var(--text);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      transition: transform .15s, filter .15s;
+    }
+    .btn:hover { transform: translateY(-1px); filter: brightness(.99); }
+    .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-danger { background: #fff1f1; color: var(--danger); border-color: #f3caca; }
+    .btn-small { padding: 7px 10px; font-size: 13px; }
+    .btn-full { width: 100%; margin-top: 22px; }
+    .login-error { color: var(--danger); display: none; margin-top: 12px; font-size: 14px; }
+
+    #dashboard { display: none; min-height: 100vh; }
+    .layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: rgba(255,255,255,.86);
+      border-right: 1px solid var(--border);
+      padding: 22px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      backdrop-filter: blur(18px);
+    }
+    .side-brand { padding: 6px 10px 18px; border-bottom: 1px solid var(--border); }
+    .side-brand .brand { font-size: 22px; }
+    .nav { display: grid; gap: 5px; flex: 1; }
+    .nav button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 700;
+    }
+    .nav button.active, .nav button:hover { background: var(--surface-soft); color: var(--accent-strong); }
+    .main { padding: 28px; max-width: 1180px; width: 100%; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+    h1, h2, h3 { font-family: Syne, sans-serif; letter-spacing: 0; }
+    h1 { font-size: clamp(28px, 4vw, 42px); }
+    .page { display: none; }
+    .page.active { display: block; }
+    .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 10px 26px rgba(188, 94, 139, .07);
+    }
+    .metric { font-family: Syne, sans-serif; color: var(--accent); font-size: 34px; font-weight: 800; }
+    .metric-label { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 18px; }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--border); background: #fffcff; }
+    .panel-body { padding: 18px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 14px; }
+    th { color: var(--muted); background: #fff7fb; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+    tr:last-child td { border-bottom: 0; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 9px; font-size: 12px; font-weight: 800; background: var(--surface-soft); color: var(--accent-strong); }
+    .thumb { width: 54px; height: 42px; border-radius: 8px; object-fit: cover; background: var(--surface-soft); border: 1px solid var(--border); display: grid; place-items: center; color: var(--muted); font-size: 12px; }
+    .modal-backdrop { position: fixed; inset: 0; display: none; place-items: center; padding: 22px; background: rgba(63,43,56,.34); backdrop-filter: blur(10px); z-index: 20; }
+    .modal-backdrop.open { display: grid; }
+    .modal { width: min(620px, 100%); max-height: 92vh; overflow: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: var(--shadow); }
+    .modal-title { margin-bottom: 16px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+    .toast { position: fixed; right: 22px; bottom: 22px; padding: 12px 15px; border-radius: 10px; background: var(--text); color: #fff; opacity: 0; transform: translateY(16px); transition: .25s; z-index: 30; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .nav { grid-template-columns: repeat(2, 1fr); }
+      .cards, .three-col, .two-col { grid-template-columns: 1fr; }
+      .main { padding: 18px; }
+      .topbar { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loginPage">
+    <div class="login-card">
+      <div class="brand">Build<span>Club</span></div>
+      <p class="sub">Admin control room. Sign in to manage website text, events, projects, team, photos, gallery, stats, and roadmap.</p>
+      <form onsubmit="doLogin(event)" style="margin-top:26px">
+        <div class="form-grid">
+          <div class="field">
+            <label for="loginUser">Email</label>
+            <input class="input" id="loginUser" type="email" value="joydeepdutta855@gmail.com" required>
+          </div>
+          <div class="field">
+            <label for="loginPass">Password</label>
+            <input class="input" id="loginPass" type="password" placeholder="Password" required>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" type="submit">Sign in</button>
+        <div class="login-error" id="loginError">Invalid email or password.</div>
+      </form>
+    </div>
+  </div>
+
+  <div id="dashboard">
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="side-brand">
+          <div class="brand">Build<span>Club</span></div>
+          <p class="sub">Structured admin dashboard</p>
+        </div>
+        <nav class="nav" id="nav">
+          <button class="active" data-page="overview">Overview</button>
+          <button data-page="brand">Brand & Links</button>
+          <button data-page="content">Website Text</button>
+          <button data-page="stats">Stats</button>
+          <button data-page="domains">Domains</button>
+          <button data-page="roadmap">Roadmap</button>
+          <button data-page="events">Events</button>
+          <button data-page="projects">Projects</button>
+          <button data-page="team">Team</button>
+          <button data-page="gallery">Photos</button>
+          <button data-page="messages">Messages</button>
+        </nav>
+        <a class="btn" href="index.html" target="_blank">View website</a>
+        <button class="btn btn-danger" onclick="doLogout()">Logout</button>
+      </aside>
+
+      <main class="main">
+        <div class="topbar">
+          <div>
+            <h1 id="pageTitle">Overview</h1>
+            <p class="sub" id="pageSub">Everything important at a glance.</p>
+          </div>
+          <button class="btn btn-primary" onclick="saveEverything()">Save all website settings</button>
+        </div>
+
+        <section class="page active" id="page-overview">
+          <div class="cards" id="overviewCards"></div>
+          <div class="panel">
+            <div class="panel-head"><h3>Quick Guide</h3></div>
+            <div class="panel-body">
+              <div class="three-col">
+                <div class="card"><h3>Text</h3><p class="sub">Edit hero, about, contact, stats and roadmap from their sections.</p></div>
+                <div class="card"><h3>Photos</h3><p class="sub">Upload event images, team avatars, and gallery photos.</p></div>
+                <div class="card"><h3>Live Data</h3><p class="sub">Use the website link after saving to confirm changes instantly.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="page-brand">
+          <div class="panel">
+            <div class="panel-head"><h3>Brand, Logo & Links</h3><button class="btn btn-primary btn-small" onclick="saveContent()">Save brand</button></div>
+            <div class="panel-body">
+              <div class="two-col">
+                <div class="field"><label>Website name</label><input class="input content-field" data-key="logoText"></div>
+                <div class="field"><label>Logo icon fallback</label><input class="input content-field" data-key="logoIcon"></div>
+              </div>
+              <div class="field" style="margin-top:16px"><label>Logo image path / URL</label><input class="input content-field" data-key="logoImage"></div>
+              <div class="field" style="margin-top:12px">
+                <label>Upload logo image</label>
+                <input class="input" id="logoUpload" type="file" accept="image/*">
+                <button class="btn btn-primary btn-small" type="button" style="margin-top:10px" onclick="uploadLogo()">Upload logo</button>
+              </div>
+              <div class="two-col" style="margin-top:16px">
+                <div class="field"><label>Discord invite URL</label><input class="input content-field" data-key="discordUrl"></div>
+                <div class="field"><label>Contact receiver email</label><input class="input content-field" data-key="contactEmail"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="page-content">
+          <div class="panel">
+            <div class="panel-head"><h3>Website Text</h3><button class="btn btn-primary btn-small" onclick="saveContent()">Save text</button></div>
+            <div class="panel-body">
+              <div class="two-col">
+                <div class="field"><label>Hero tagline</label><input class="input content-field" data-key="heroTagline"></div>
+                <div class="field"><label>Hero badge / college</label><input class="input content-field" data-key="heroSubtitle"></div>
+              </div>
+              <div class="field" style="margin-top:16px"><label>Hero description</label><textarea class="content-field" data-key="heroDescription"></textarea></div>
+              <div class="field" style="margin-top:16px"><label>About text</label><textarea class="content-field" data-key="aboutText"></textarea></div>
+              <div class="two-col" style="margin-top:16px">
+                <div class="field"><label>Contact title</label><input class="input content-field" data-key="contactTitle"></div>
+                <div class="field"><label>Location</label><input class="input content-field" data-key="location"></div>
+              </div>
+              <div class="two-col" style="margin-top:16px">
+                <div class="field"><label>Community</label><input class="input content-field" data-key="community"></div>
+                <div class="field"><label>Open hours</label><input class="input content-field" data-key="openHours"></div>
+              </div>
+              <div class="field" style="margin-top:16px"><label>Contact text</label><textarea class="content-field" data-key="contactText"></textarea></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="page-stats">
+          <div class="panel">
+            <div class="panel-head"><h3>Homepage Stats</h3><button class="btn btn-primary btn-small" onclick="addStat()">Add stat</button></div>
+            <div class="panel-body" id="statsEditor"></div>
+          </div>
+        </section>
+
+        <section class="page" id="page-domains">
+          <div class="panel">
+            <div class="panel-head"><h3>Build Domains</h3><button class="btn btn-primary btn-small" onclick="addDomain()">Add domain</button></div>
+            <div class="panel-body" id="domainsEditor"></div>
+          </div>
+        </section>
+
+        <section class="page" id="page-roadmap">
+          <div class="panel">
+            <div class="panel-head"><h3>Roadmap</h3><button class="btn btn-primary btn-small" onclick="addRoadmap()">Add step</button></div>
+            <div class="panel-body" id="roadmapEditor"></div>
+          </div>
+        </section>
+
+        <section class="page" id="page-events">
+          <div class="panel">
+            <div class="panel-head"><h3>Events</h3><button class="btn btn-primary btn-small" onclick="openEvent()">Add event</button></div>
+            <div id="eventsTable"></div>
+          </div>
+        </section>
+
+        <section class="page" id="page-projects">
+          <div class="panel">
+            <div class="panel-head"><h3>Projects</h3><button class="btn btn-primary btn-small" onclick="openProject()">Add project</button></div>
+            <div id="projectsTable"></div>
+          </div>
+        </section>
+
+        <section class="page" id="page-team">
+          <div class="panel">
+            <div class="panel-head"><h3>Team Leadership</h3><button class="btn btn-primary btn-small" onclick="openMember()">Add member</button></div>
+            <div class="panel-body"><p class="sub">Suggested roles: President, Vice President, Treasurer, General Secretary, Assistant Secretary, Social Media Manager.</p></div>
+            <div id="teamTable"></div>
+          </div>
+        </section>
+
+        <section class="page" id="page-gallery">
+          <div class="panel">
+            <div class="panel-head"><h3>Gallery Photos</h3><button class="btn btn-primary btn-small" onclick="openGallery()">Add photo</button></div>
+            <div id="galleryTable"></div>
+          </div>
+        </section>
+
+        <section class="page" id="page-messages">
+          <div class="panel">
+            <div class="panel-head"><h3>Messages From Website</h3><button class="btn btn-small" onclick="loadMessages()">Refresh</button></div>
+            <div id="messagesTable"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <h2 class="modal-title" id="modalTitle">Edit</h2>
+      <form id="modalForm"></form>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API = location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://localhost:3001/api'
+      : '/api';
+    const ASSET_BASE = API.replace(/\/api$/, '');
+    const ROLE_OPTIONS = ['President', 'Vice President', 'Treasurer', 'General Secretary', 'Assistant Secretary', 'Social Media Manager'];
+    let DATA = { events: [], projects: [], team: [], gallery: [], domains: [], messages: [], siteContent: { stats: [], roadmap: [] } };
+    let modalMode = '';
+    let editingId = '';
+
+    const $ = id => document.getElementById(id);
+    const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    const assetURL = value => !value ? '' : (/^(https?:|data:|blob:)/i.test(value) ? value : `${ASSET_BASE}${String(value).startsWith('/') ? value : `/${value}`}`);
+    const list = value => String(value || '').split(',').map(v => v.trim()).filter(Boolean);
+    const toast = message => { $('toast').textContent = message; $('toast').classList.add('show'); setTimeout(() => $('toast').classList.remove('show'), 2600); };
+
+    async function request(path, options = {}) {
+      const token = localStorage.getItem('buildclubAdminToken');
+      const headers = { ...(options.headers || {}) };
+      if (token) headers['X-Admin-Token'] = token;
+      const res = await fetch(API + path, { credentials: 'include', ...options, headers });
+      if (!res.ok) throw new Error(await res.text());
+      return res.headers.get('content-type')?.includes('application/json') ? res.json() : res.text();
+    }
+
+    async function doLogin(e) {
+      e.preventDefault();
+      try {
+        const auth = await request('/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: $('loginUser').value.trim(), password: $('loginPass').value })
+        });
+        if (auth.token) localStorage.setItem('buildclubAdminToken', auth.token);
+        $('loginPage').style.display = 'none';
+        $('dashboard').style.display = 'block';
+        await loadData();
+      } catch {
+        $('loginError').style.display = 'block';
+      }
+    }
+
+    async function doLogout() {
+      await request('/admin/logout', { method: 'POST' }).catch(() => {});
+      localStorage.removeItem('buildclubAdminToken');
+      location.reload();
+    }
+
+    async function loadData() {
+      DATA = await request('/data');
+      DATA.gallery = DATA.gallery || [];
+      DATA.siteContent = DATA.siteContent || {};
+      DATA.siteContent.stats = DATA.siteContent.stats || [];
+      DATA.siteContent.roadmap = DATA.siteContent.roadmap || [];
+      DATA.domains = DATA.domains || [];
+      await loadMessages(false);
+      renderAll();
+    }
+
+    function renderAll() {
+      renderOverview();
+      renderContent();
+      renderStatsEditor();
+      renderDomainsEditor();
+      renderRoadmapEditor();
+      renderEvents();
+      renderProjects();
+      renderTeam();
+      renderGallery();
+      renderMessages();
+    }
+
+    document.querySelectorAll('#nav button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        $('page-' + btn.dataset.page).classList.add('active');
+        $('pageTitle').textContent = btn.textContent;
+        $('pageSub').textContent = btn.dataset.page === 'overview' ? 'Everything important at a glance.' : 'Edit this section, then save.';
+      });
+    });
+
+    function renderOverview() {
+      $('overviewCards').innerHTML = [
+        ['Events', DATA.events.length],
+        ['Projects', DATA.projects.length],
+        ['Team Members', DATA.team.length],
+        ['Photos', DATA.gallery.length]
+      ].map(([label, value]) => `<div class="card"><div class="metric">${value}</div><div class="metric-label">${label}</div></div>`).join('');
+    }
+
+    function renderContent() {
+      document.querySelectorAll('.content-field').forEach(field => field.value = DATA.siteContent[field.dataset.key] || '');
+    }
+
+    function collectContent() {
+      const content = { ...DATA.siteContent };
+      document.querySelectorAll('.content-field').forEach(field => content[field.dataset.key] = field.value);
+      content.stats = DATA.siteContent.stats;
+      content.roadmap = DATA.siteContent.roadmap;
+      return content;
+    }
+
+    async function saveContent() {
+      DATA.siteContent = await request('/admin/content', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(collectContent())
+      });
+      toast('Website text saved.');
+    }
+
+    async function saveEverything() {
+      await saveFullData('All website settings saved.');
+    }
+
+    function renderStatsEditor() {
+      $('statsEditor').innerHTML = DATA.siteContent.stats.map((s, i) => `
+        <div class="two-col card" style="margin-bottom:12px">
+          <div class="field"><label>Value</label><input class="input" value="${escapeHTML(s.value)}" oninput="DATA.siteContent.stats[${i}].value=this.value"></div>
+          <div class="field"><label>Label</label><input class="input" value="${escapeHTML(s.label)}" oninput="DATA.siteContent.stats[${i}].label=this.value"></div>
+          <button class="btn btn-danger btn-small" onclick="removeStat(${i})">Remove</button>
+        </div>
+      `).join('') + `<button class="btn btn-primary" onclick="saveContent()">Save stats</button>`;
+    }
+    function addStat() { DATA.siteContent.stats.push({ value: '0', label: 'New Stat' }); renderStatsEditor(); }
+    function removeStat(i) { DATA.siteContent.stats.splice(i, 1); renderStatsEditor(); }
+
+    async function uploadLogo() {
+      const file = $('logoUpload').files[0];
+      if (!file) return toast('Choose a logo first.');
+      const form = new FormData();
+      form.append('image', file);
+      const saved = await request('/admin/media', { method: 'POST', body: form });
+      DATA.siteContent.logoImage = saved.url;
+      document.querySelector('[data-key="logoImage"]').value = saved.url;
+      await saveContent();
+      toast('Logo uploaded.');
+    }
+
+    function renderDomainsEditor() {
+      const domains = DATA.domains || [];
+      $('domainsEditor').innerHTML = domains.map((d, i) => `
+        <div class="card" style="margin-bottom:12px">
+          <div class="three-col">
+            <div class="field"><label>Number</label><input class="input" value="${escapeHTML(d.num)}" oninput="DATA.domains[${i}].num=this.value"></div>
+            <div class="field"><label>Icon</label><input class="input" value="${escapeHTML(d.icon)}" oninput="DATA.domains[${i}].icon=this.value"></div>
+            <div class="field"><label>Name</label><input class="input" value="${escapeHTML(d.name)}" oninput="DATA.domains[${i}].name=this.value"></div>
+          </div>
+          <button class="btn btn-danger btn-small" onclick="removeDomain(${i})">Remove</button>
+        </div>
+      `).join('') + `<button class="btn btn-primary" onclick="saveFullData('Domains saved.')">Save domains</button>`;
+    }
+    function addDomain() { DATA.domains.push({ num: String(DATA.domains.length + 1).padStart(2, '0'), icon: '*', name: 'New Domain' }); renderDomainsEditor(); }
+    function removeDomain(i) { DATA.domains.splice(i, 1); renderDomainsEditor(); }
+
+    async function saveFullData(message = 'Saved.') {
+      const body = { ...DATA, siteContent: collectContent() };
+      delete body.messages;
+      DATA = await request('/admin/data', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      toast(message);
+    }
+
+    function renderRoadmapEditor() {
+      $('roadmapEditor').innerHTML = DATA.siteContent.roadmap.map((r, i) => `
+        <div class="card" style="margin-bottom:12px">
+          <div class="three-col">
+            <div class="field"><label>Stage</label><input class="input" value="${escapeHTML(r.stage)}" oninput="DATA.siteContent.roadmap[${i}].stage=this.value"></div>
+            <div class="field"><label>Title</label><input class="input" value="${escapeHTML(r.title)}" oninput="DATA.siteContent.roadmap[${i}].title=this.value"></div>
+            <div class="field"><label>Active</label><select onchange="DATA.siteContent.roadmap[${i}].active=this.value==='true'"><option value="false"${!r.active ? ' selected' : ''}>No</option><option value="true"${r.active ? ' selected' : ''}>Yes</option></select></div>
+          </div>
+          <div class="field" style="margin-top:12px"><label>Description</label><textarea oninput="DATA.siteContent.roadmap[${i}].desc=this.value">${escapeHTML(r.desc)}</textarea></div>
+          <button class="btn btn-danger btn-small" onclick="removeRoadmap(${i})">Remove</button>
+        </div>
+      `).join('') + `<button class="btn btn-primary" onclick="saveContent()">Save roadmap</button>`;
+    }
+    function addRoadmap() { DATA.siteContent.roadmap.push({ stage: 'New Stage', title: 'New Step', desc: 'Describe this step.', active: false }); renderRoadmapEditor(); }
+    function removeRoadmap(i) { DATA.siteContent.roadmap.splice(i, 1); renderRoadmapEditor(); }
+
+    function table(headers, rows) {
+      if (!rows) return '<div class="panel-body"><p class="sub">Nothing here yet.</p></div>';
+      return `<table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
+    }
+
+    function renderEvents() {
+      $('eventsTable').innerHTML = table(['Photo', 'Title', 'Date', 'Category', 'Status', 'Actions'], DATA.events.map(e => `
+        <tr><td>${e.image ? `<img class="thumb" src="${escapeHTML(assetURL(e.image))}">` : '<div class="thumb">No photo</div>'}</td><td><strong>${escapeHTML(e.title)}</strong></td><td>${escapeHTML(e.date)}</td><td><span class="badge">${escapeHTML(e.category)}</span></td><td><span class="badge">${escapeHTML(e.status || 'upcoming')}</span></td><td class="actions"><button class="btn btn-small" onclick="openEvent('${e.id}')">Edit</button><button class="btn btn-danger btn-small" onclick="deleteItem('events','${e.id}')">Delete</button></td></tr>
+      `).join(''));
+    }
+
+    function renderProjects() {
+      $('projectsTable').innerHTML = table(['Title', 'Domain', 'Status', 'Tech', 'Actions'], DATA.projects.map(p => `
+        <tr><td><strong>${escapeHTML(p.title)}</strong></td><td>${escapeHTML(p.domain)}</td><td><span class="badge">${escapeHTML(p.status)}</span></td><td>${escapeHTML((p.tech || []).join(', '))}</td><td class="actions"><button class="btn btn-small" onclick="openProject('${p.id}')">Edit</button><button class="btn btn-danger btn-small" onclick="deleteItem('projects','${p.id}')">Delete</button></td></tr>
+      `).join(''));
+    }
+
+    function renderTeam() {
+      $('teamTable').innerHTML = table(['Photo', 'Name', 'Role', 'Year / Dept', 'Actions'], DATA.team.map(m => `
+        <tr><td>${m.avatar ? `<img class="thumb" src="${escapeHTML(assetURL(m.avatar))}">` : '<div class="thumb">Avatar</div>'}</td><td><strong>${escapeHTML(m.name)}</strong></td><td>${escapeHTML(m.role)}</td><td>${escapeHTML(m.year)} / ${escapeHTML(m.dept)}</td><td class="actions"><button class="btn btn-small" onclick="openMember('${m.id}')">Edit</button><button class="btn btn-danger btn-small" onclick="deleteItem('team','${m.id}')">Remove</button></td></tr>
+      `).join(''));
+    }
+
+    function renderGallery() {
+      $('galleryTable').innerHTML = table(['Photo', 'Title', 'Category', 'Featured', 'Actions'], DATA.gallery.map(g => `
+        <tr><td>${g.image ? `<img class="thumb" src="${escapeHTML(assetURL(g.image))}">` : '<div class="thumb">Photo</div>'}</td><td><strong>${escapeHTML(g.title)}</strong></td><td>${escapeHTML(g.category || g.title || 'Club Highlights')}</td><td>${g.featured ? '<span class="badge">Featured</span>' : ''}</td><td class="actions"><button class="btn btn-small" onclick="openGallery('${g.id}')">Edit</button><button class="btn btn-danger btn-small" onclick="deleteItem('gallery','${g.id}')">Delete</button></td></tr>
+      `).join(''));
+    }
+
+    async function loadMessages(showToast = true) {
+      try {
+        DATA.messages = await request('/admin/messages');
+        if (showToast) toast('Messages refreshed.');
+      } catch {
+        DATA.messages = DATA.messages || [];
+      }
+    }
+
+    function renderMessages() {
+      const target = $('messagesTable');
+      if (!target) return;
+      const messages = DATA.messages || [];
+      target.innerHTML = table(['Name', 'Email', 'Department', 'Message', 'Date'], messages.map(m => `
+        <tr><td><strong>${escapeHTML(m.name)}</strong></td><td>${escapeHTML(m.email)}</td><td>${escapeHTML(m.department)}</td><td>${escapeHTML(m.message)}</td><td>${new Date(m.createdAt).toLocaleString()}</td></tr>
+      `).join(''));
+    }
+
+    function openModal(title, html, mode, id = '') {
+      modalMode = mode;
+      editingId = id;
+      $('modalTitle').textContent = title;
+      $('modalForm').innerHTML = html;
+      $('modalBackdrop').classList.add('open');
+    }
+    function closeModal() { $('modalBackdrop').classList.remove('open'); }
+    $('modalBackdrop').addEventListener('click', e => { if (e.target === $('modalBackdrop')) closeModal(); });
+
+    function openEvent(id = '') {
+      const e = DATA.events.find(x => x.id === id) || {};
+      openModal(id ? 'Edit Event' : 'Add Event', `
+        <div class="form-grid">
+          <div class="field"><label>Title</label><input class="input" name="title" value="${escapeHTML(e.title)}" required></div>
+          <div class="two-col"><div class="field"><label>Date</label><input class="input" name="date" type="date" value="${escapeHTML(e.date)}" required></div><div class="field"><label>Category</label><input class="input" name="category" value="${escapeHTML(e.category || 'Workshop')}"></div></div>
+          <div class="field"><label>Event status</label><select name="status"><option value="upcoming"${(e.status || 'upcoming') !== 'completed' ? ' selected' : ''}>Coming Up</option><option value="completed"${e.status === 'completed' ? ' selected' : ''}>Completed / Done</option></select></div>
+          <div class="field"><label>Description</label><textarea name="description" required>${escapeHTML(e.description)}</textarea></div>
+          <div class="field"><label>Tags</label><input class="input" name="tags" value="${escapeHTML((e.tags || []).join(', '))}"><div class="hint">Separate tags with commas.</div></div>
+          <div class="field"><label>Image</label><input class="input" name="image" type="file" accept="image/*"></div>
+        </div><div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary">Save event</button></div>
+      `, 'event', id);
+    }
+
+    function openProject(id = '') {
+      const p = DATA.projects.find(x => x.id === id) || {};
+      openModal(id ? 'Edit Project' : 'Add Project', `
+        <div class="form-grid">
+          <div class="field"><label>Title</label><input class="input" name="title" value="${escapeHTML(p.title)}" required></div>
+          <div class="two-col"><div class="field"><label>Domain</label><input class="input" name="domain" value="${escapeHTML(p.domain || 'Software')}"></div><div class="field"><label>Status</label><select name="status"><option value="in-progress"${p.status !== 'completed' ? ' selected' : ''}>In Progress</option><option value="completed"${p.status === 'completed' ? ' selected' : ''}>Completed</option></select></div></div>
+          <div class="field"><label>Description</label><textarea name="description" required>${escapeHTML(p.description)}</textarea></div>
+          <div class="field"><label>Tech Stack</label><input class="input" name="tech" value="${escapeHTML((p.tech || []).join(', '))}"></div>
+        </div><div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary">Save project</button></div>
+      `, 'project', id);
+    }
+
+    function openMember(id = '') {
+      const m = DATA.team.find(x => x.id === id) || {};
+      openModal(id ? 'Edit Team Member' : 'Add Team Member', `
+        <div class="form-grid">
+          <div class="field"><label>Name</label><input class="input" name="name" value="${escapeHTML(m.name)}" required></div>
+          <div class="two-col"><div class="field"><label>Role</label><select name="role">${ROLE_OPTIONS.map(r => `<option${m.role === r ? ' selected' : ''}>${r}</option>`).join('')}</select></div><div class="field"><label>Year</label><input class="input" name="year" value="${escapeHTML(m.year || '2nd Year')}"></div></div>
+          <div class="field"><label>Department</label><input class="input" name="dept" value="${escapeHTML(m.dept || 'ECE')}"></div>
+          <div class="field"><label>Bio</label><textarea name="bio">${escapeHTML(m.bio)}</textarea></div>
+          <div class="field"><label>Photo</label><input class="input" name="avatar" type="file" accept="image/*"></div>
+        </div><div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary">Save member</button></div>
+      `, 'member', id);
+    }
+
+    function openGallery(id = '') {
+      const g = DATA.gallery.find(x => x.id === id) || {};
+      openModal(id ? 'Edit Photo' : 'Add Photo', `
+        <div class="form-grid">
+          <div class="field"><label>Title</label><input class="input" name="title" value="${escapeHTML(g.title || 'Club photo')}" required></div>
+          <div class="field"><label>Highlight category</label><input class="input" name="category" value="${escapeHTML(g.category || g.title || 'Workshop')}" required><div class="hint">Photos with the same category open together when a visitor clicks that highlight.</div></div>
+          <div class="field"><label>Featured large photo</label><select name="featured"><option value="false"${!g.featured ? ' selected' : ''}>No</option><option value="true"${g.featured ? ' selected' : ''}>Yes</option></select></div>
+          <div class="field"><label>Image</label><input class="input" name="image" type="file" accept="image/*" ${id ? '' : 'required'}></div>
+        </div><div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary">Save photo</button></div>
+      `, 'gallery', id);
+    }
+
+    $('modalForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      try {
+        if (modalMode === 'event') await saveMultipart('events');
+        if (modalMode === 'project') await saveJson('projects', ['title', 'domain', 'description', 'tech', 'status']);
+        if (modalMode === 'member') await saveMultipart('team');
+        if (modalMode === 'gallery') await saveMultipart('gallery');
+        closeModal();
+        await loadData();
+        toast('Saved successfully.');
+      } catch (err) {
+        toast(err.message ? `Could not save: ${err.message}` : 'Could not save. Please check the backend is running.');
+      }
+    });
+
+    async function saveMultipart(resource) {
+      const form = new FormData($('modalForm'));
+      const path = editingId ? `/admin/${resource}/${editingId}` : `/admin/${resource}`;
+      await request(path, { method: editingId ? 'PUT' : 'POST', body: form });
+    }
+
+    async function saveJson(resource, keys) {
+      const form = new FormData($('modalForm'));
+      const body = {};
+      keys.forEach(k => body[k] = form.get(k));
+      const path = editingId ? `/admin/${resource}/${editingId}` : `/admin/${resource}`;
+      await request(path, { method: editingId ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    }
+
+    async function deleteItem(resource, id) {
+      if (!confirm('Delete this item?')) return;
+      await request(`/admin/${resource}/${id}`, { method: 'DELETE' });
+      await loadData();
+      toast('Deleted.');
+    }
+
+    request('/admin/check').then(auth => {
+      if (auth.authenticated) {
+        $('loginPage').style.display = 'none';
+        $('dashboard').style.display = 'block';
+        loadData();
+      }
+    }).catch(() => {});
+  </script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+{
+  "events": [
+    {
+      "id": "evt1",
+      "title": "Build Club Launch Workshop",
+      "date": "2025-03-06",
+      "category": "Workshop",
+      "status": "completed",
+      "description": "one day hands-on workshop across robotics, IoT, power electronics and software. Simple projects to kickstart the build momentum.",
+      "image": "/uploads/1777586832530-WhatsApp Image 2026-04-23 at 5.59.23 PM.jpeg",
+      "tags": [
+        "Robotics",
+        "IoT",
+        "Electronics"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "prj1",
+      "title": "Smart Flow",
+      "domain": "IoT",
+      "description": "IoT-based water flow monitoring system using ESP32 and ThingSpeak cloud. Real-time visualization on mobile.",
+      "tech": [
+        "ESP32",
+        "ThingSpeak",
+        "IoT"
+      ],
+      "status": "in-progress"
+    },
+    {
+      "id": "prj2",
+      "title": "Line-Bot",
+      "domain": "Robotics",
+      "description": "Autonomous line-following robot with PID control. Built for inter-college competition circuits.",
+      "tech": [
+        "ESP32",
+        "PID",
+        "Robotics"
+      ],
+      "status": "in-progress"
+    },
+    {
+      "id": "prj3",
+      "title": "Inverse Teleprompter",
+      "domain": "Communications",
+      "description": "Wireless speech-to-text teleprompter using ESPNOW protocol for low-latency communication between devices.",
+      "tech": [
+        "ESP-NOW",
+        "Wireless",
+        "Display"
+      ],
+      "status": "in-progress"
+    },
+    {
+      "id": "prj4",
+      "title": "Step It Up",
+      "domain": "Power Electronics",
+      "description": "Boost converter design and implementation on breadboard. Step-up circuit with variable duty cycle control.",
+      "tech": [
+        "Power Electronics",
+        "PWM",
+        "Analog"
+      ],
+      "status": "in-progress"
+    },
+    {
+      "id": "prj5",
+      "title": "Filmfare Robot",
+      "domain": "Robotics",
+      "description": "Tabletop robot arm that tracks a face using inverse kinematics. Camera always points at the actor.",
+      "tech": [
+        "IK",
+        "Computer Vision",
+        "Servo"
+      ],
+      "status": "in-progress"
+    },
+    {
+      "id": "prj6",
+      "title": "Build Club Web Portal",
+      "domain": "Software",
+      "description": "Full-stack web portal for the Build Club with admin dashboard, event management, and member tracking.",
+      "tech": [
+        "Node.js",
+        "Express",
+        "JavaScript"
+      ],
+      "status": "in-progress"
+    }
+  ],
+  "team": [
+    {
+      "id": "tm1",
+      "name": "President",
+      "role": "President",
+      "year": "1st year",
+      "dept": "fihsics",
+      "bio": "Leads the club, sets vision and drives the club forward.",
+      "avatar": "/uploads/1777586592990-Screenshot 2026-05-01 033238.png"
+    },
+    {
+      "id": "tm2",
+      "name": "Vice President",
+      "role": "Vice President",
+      "year": "1st Year",
+      "dept": "BBA",
+      "bio": "Supports President, manages workshop curriculum and troubleshoots complex project bottlenecks.",
+      "avatar": "/uploads/1777586534141-Screenshot 2026-05-01 033152.png"
+    },
+    {
+      "id": "tm3",
+      "name": "Treasurer",
+      "role": "Treasurer",
+      "year": "1st Year",
+      "dept": "mathematics",
+      "bio": "Manages club finances, budget allocation and resource procurement.",
+      "avatar": "/uploads/1777586682192-Screenshot 2026-05-01 033340.png"
+    },
+    {
+      "id": "tm4",
+      "name": "General Secretary",
+      "role": "General Secretary",
+      "year": "1st Year",
+      "dept": "commerce",
+      "bio": "Handles documentation, correspondence and day-to-day club operations.",
+      "avatar": "/uploads/1777586494164-Screenshot 2026-05-01 033058.png"
+    },
+    {
+      "id": "tm5",
+      "name": "Assistant Secretary",
+      "role": "Assistant Secretary",
+      "year": "3rd Year",
+      "dept": "mathematics",
+      "bio": "Assists General Secretary, coordinates events and member communications.",
+      "avatar": "/uploads/1777586743344-Screenshot 2026-05-01 033509.png"
+    },
+    {
+      "id": "tm6",
+      "name": "Social Media Manager",
+      "role": "Social Media Manager",
+      "year": "2nd Year",
+      "dept": "CSE",
+      "bio": "Manages social media presence, creates content and drives community engagement.",
+      "avatar": ""
+    }
+  ],
+  "siteContent": {
+    "heroTagline": "Walk in. Build. Learn.",
+    "heroSubtitle": "St. Anthony's College, Shillong",
+    "heroDescription": "A student-driven maker community where learning feels like play. 24x7 open lab, cross-disciplinary teams, real hardware, real projects.",
+    "aboutText": "Build Club is a vibrant, student-driven community where learning feels like play. Like a child with Lego, we believe the best engineers are built through hands-on creation, not textbooks. We're open 24x7. Come walk in, form a team, and build something that matters.",
+    "contactTitle": "Ready to Build?",
+    "contactText": "Walk into Build Club, introduce yourself, and start making things. No experience required, only curiosity. Reach out to learn more or join our next workshop.",
+    "location": "St. Anthony's College, Shillong",
+    "community": "Discord Build Club Server",
+    "discordUrl": "https://discord.gg/SjnfXMTS",
+    "contactEmail": "sacbuild2@gmail.com",
+    "openHours": "24x7 - Walk in anytime",
+    "logoText": "Build Club",
+    "logoIcon": "⚡",
+    "logoImage": "/uploads/1777589302316-Screenshot_2026-04-26_180038-removebg-preview.png",
+    "stats": [
+      {
+        "value": "20+",
+        "label": "Active Members"
+      },
+      {
+        "value": "10+",
+        "label": "Projects Built"
+      },
+      {
+        "value": "10",
+        "label": "Domains"
+      },
+      {
+        "value": "24x7",
+        "label": "Open Hours"
+      }
+    ],
+    "roadmap": [
+      {
+        "stage": "Stage 1",
+        "title": "Pre-Launch",
+        "desc": "Core team assembled, infrastructure ready, membership drive, workshop prep.",
+        "active": false
+      },
+      {
+        "stage": "Stage 2",
+        "title": "Build Club Launch",
+        "desc": "one-day hands-on kickoff workshop across all domains. Simple projects to ignite momentum.",
+        "active": false
+      },
+      {
+        "stage": "Stage 3",
+        "title": "Takes Off",
+        "desc": "Core team takes ownership. Open hours set. Calendar of events. Projects released to community.",
+        "active": true
+      },
+      {
+        "stage": "Future",
+        "title": "Domain Specific Programs",
+        "desc": "Robotics, IC Design, VR Learning, finishing schools and competitions at national level.",
+        "active": false
+      }
+    ]
+  },
+  "domains": [
+    {
+      "name": "General Electronics",
+      "icon": "⚡",
+      "num": "01"
+    },
+    {
+      "name": "Internet of Things",
+      "icon": "🌐",
+      "num": "02"
+    },
+    {
+      "name": "Communications",
+      "icon": "📡",
+      "num": "03"
+    },
+    {
+      "name": "Power Electronics",
+      "icon": "🔋",
+      "num": "04"
+    },
+    {
+      "name": "Robotics",
+      "icon": "🤖",
+      "num": "05"
+    },
+    {
+      "name": "Control Systems",
+      "icon": "🎛️",
+      "num": "06"
+    },
+    {
+      "name": "PCB Design",
+      "icon": "🖥️",
+      "num": "07"
+    },
+    {
+      "name": "Computer Aided Design",
+      "icon": "📐",
+      "num": "08"
+    },
+    {
+      "name": "Mechanics",
+      "icon": "⚙️",
+      "num": "09"
+    },
+    {
+      "name": "Software Builds",
+      "icon": "💻",
+      "num": "10"
+    }
+  ],
+  "gallery": [
+    {
+      "id": "gal1",
+      "title": "Open Lab",
+      "category": "Open Lab",
+      "image": "",
+      "featured": true
+    },
+    {
+      "id": "gal2",
+      "title": "Workshop",
+      "category": "Workshop",
+      "image": "",
+      "featured": false
+    },
+    {
+      "id": "gal3",
+      "title": "Build Session",
+      "category": "Build Session",
+      "image": "",
+      "featured": false
+    },
+    {
+      "id": "gal4",
+      "title": "Ideation",
+      "category": "Ideation",
+      "image": "",
+      "featured": false
+    },
+    {
+      "id": "gal5",
+      "title": "Prototyping",
+      "category": "Prototyping",
+      "image": "",
+      "featured": false
+    },
+    {
+      "id": "gal6",
+      "title": "Research",
+      "category": "Research",
+      "image": "",
+      "featured": false
+    }
+  ],
+  "messages": [
+    {
+      "id": "msgiisa1qguf",
+      "name": "Joydeep Dutta",
+      "email": "joydeepdutta855@gmail.com",
+      "department": "sfssf",
+      "message": "sfsfsfsf",
+      "createdAt": "2026-04-30T22:26:04.839Z",
+      "sentTo": "sacbuild2@gmail.com"
+    },
+    {
+      "id": "msgjzsv0e5f5",
+      "name": "Smoke Test",
+      "email": "test@example.com",
+      "department": "ECE",
+      "message": "Testing contact storage",
+      "createdAt": "2026-04-30T22:20:18.147Z",
+      "sentTo": "sacbuild2@gmail.com"
+    }
+  ]
+}
