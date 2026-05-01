@@ -44,7 +44,7 @@ Backend runs at: `http://localhost:3001`
 
 **Admin credentials:**
 - Email: `joydeepdutta855@gmail.com`
-- Password: `231456buildsirsac`
+- Password: `231456joybuilds231456`
 
 ---
 

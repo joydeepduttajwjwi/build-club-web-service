@@ -38,7 +38,7 @@ const genId = () => Math.random().toString(36).substr(2, 9);
 
 // Admin credentials (in production use proper auth)
 const ADMIN_USER = 'joydeepdutta855@gmail.com';
-const ADMIN_PASS = '231456buildsirsac';
+const ADMIN_PASS = '231456joybuilds231456';
 const ADMIN_TOKEN = Buffer.from(`${ADMIN_USER}:${ADMIN_PASS}`).toString('base64');
 
 const toList = (value) => {
