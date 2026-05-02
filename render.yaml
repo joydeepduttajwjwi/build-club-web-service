@@ -1,5 +1,8 @@
 services:
   - type: static
     name: build-club
-    staticPublishPath: ./
     buildCommand: ""
+    staticPublishPath: ./
+    headers:
+      - key: Cache-Control
+        value: max-age=3600
