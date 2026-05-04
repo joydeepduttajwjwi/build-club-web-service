@@ -357,8 +357,6 @@
       ? 'http://localhost:3001/api'
       : '/api';
     const ASSET_BASE = API.replace(/\/api$/, '');
-    const ADMIN_USER = 'joydeepdutta855@gmail.com';
-    const ADMIN_PASS = '231456joybuilds231456';
     const ROLE_OPTIONS = ['President', 'Vice President', 'Treasurer', 'General Secretary', 'Assistant Secretary', 'Social Media Manager'];
     let DATA = { events: [], projects: [], team: [], gallery: [], domains: [], messages: [], siteContent: { stats: [], roadmap: [] } };
     let modalMode = '';
@@ -381,27 +379,18 @@
 
     async function doLogin(e) {
       e.preventDefault();
-      const email = $('loginUser').value.trim();
-      const password = $('loginPass').value;
       try {
         const auth = await request('/admin/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: email, password })
+          body: JSON.stringify({ username: $('loginUser').value.trim(), password: $('loginPass').value })
         });
         if (auth.token) localStorage.setItem('buildclubAdminToken', auth.token);
         $('loginPage').style.display = 'none';
         $('dashboard').style.display = 'block';
         await loadData();
       } catch {
-        if (email === ADMIN_USER && password === ADMIN_PASS) {
-          localStorage.setItem('buildclubAdminToken', 'local-admin');
-          $('loginPage').style.display = 'none';
-          $('dashboard').style.display = 'block';
-          await loadData().catch(() => {});
-        } else {
-          $('loginError').style.display = 'block';
-        }
+        $('loginError').style.display = 'block';
       }
     }
 
@@ -412,11 +401,7 @@
     }
 
     async function loadData() {
-      try {
-        DATA = await request('/data');
-      } catch {
-        DATA = { events: [], projects: [], team: [], gallery: [], domains: [], messages: [], siteContent: { stats: [], roadmap: [] } };
-      }
+      DATA = await request('/data');
       DATA.gallery = DATA.gallery || [];
       DATA.siteContent = DATA.siteContent || {};
       DATA.siteContent.stats = DATA.siteContent.stats || [];
