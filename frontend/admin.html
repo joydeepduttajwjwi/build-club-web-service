@@ -384,7 +384,7 @@
       const email = $('loginUser').value.trim();
       const password = $('loginPass').value;
       try {
-        const auth = await request('/admin/login', {
+        const auth = await request('/api/admin/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: email, password })
@@ -406,14 +406,14 @@
     }
 
     async function doLogout() {
-      await request('/admin/logout', { method: 'POST' }).catch(() => {});
+      await request('/api/admin/logout', { method: 'POST' }).catch(() => {});
       localStorage.removeItem('buildclubAdminToken');
       location.reload();
     }
 
     async function loadData() {
       try {
-        DATA = await request('/data');
+        DATA = await request('/api/data');
       } catch {
         DATA = { events: [], projects: [], team: [], gallery: [], domains: [], messages: [], siteContent: { stats: [], roadmap: [] } };
       }
@@ -472,7 +472,7 @@
     }
 
     async function saveContent() {
-      DATA.siteContent = await request('/admin/content', {
+      DATA.siteContent = await request('/api/admin/content', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(collectContent())
@@ -501,7 +501,7 @@
       if (!file) return toast('Choose a logo first.');
       const form = new FormData();
       form.append('image', file);
-      const saved = await request('/admin/media', { method: 'POST', body: form });
+      const saved = await request('/api/admin/media', { method: 'POST', body: form });
       DATA.siteContent.logoImage = saved.url;
       document.querySelector('[data-key="logoImage"]').value = saved.url;
       await saveContent();
@@ -527,7 +527,7 @@
     async function saveFullData(message = 'Saved.') {
       const body = { ...DATA, siteContent: collectContent() };
       delete body.messages;
-      DATA = await request('/admin/data', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      DATA = await request('/api/admin/data', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       toast(message);
     }
 
@@ -578,7 +578,7 @@
 
     async function loadMessages(showToast = true) {
       try {
-        DATA.messages = await request('/admin/messages');
+        DATA.messages = await request('/api/admin/messages');
         if (showToast) toast('Messages refreshed.');
       } catch {
         DATA.messages = DATA.messages || [];
@@ -686,12 +686,12 @@
 
     async function deleteItem(resource, id) {
       if (!confirm('Delete this item?')) return;
-      await request(`/admin/${resource}/${id}`, { method: 'DELETE' });
+      await request(`/api/admin/${resource}/${id}`, { method: 'DELETE' });
       await loadData();
       toast('Deleted.');
     }
 
-    request('/admin/check').then(auth => {
+    request('/api/admin/check').then(auth => {
       if (auth.authenticated) {
         $('loginPage').style.display = 'none';
         $('dashboard').style.display = 'block';

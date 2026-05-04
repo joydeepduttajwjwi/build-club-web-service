@@ -839,12 +839,19 @@ async function handleForm(e) {
   const form = e.target;
   const payload = Object.fromEntries(new FormData(form).entries());
   try {
-    await fetch(`${API_BASE}/contact`, {
+    const response = await fetch(`${API_BASE}/contact`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-  } catch {}
+    if (response.ok) {
+      console.log('Contact form submitted successfully');
+    } else {
+      console.error('Contact form submission failed');
+    }
+  } catch (error) {
+    console.error('Contact form error:', error);
+  }
 
   const emailForm = document.createElement('form');
   emailForm.action = `https://formsubmit.co/${SITE_CONTENT.contactEmail || 'sacbuild2@gmail.com'}`;
