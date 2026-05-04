@@ -36,9 +36,9 @@ const readDB = () => JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
 const writeDB = (data) => fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
 const genId = () => Math.random().toString(36).substr(2, 9);
 
-// Admin credentials (in production use proper auth)
-const ADMIN_USER = 'joydeepdutta855@gmail.com';
-const ADMIN_PASS = '231456joybuilds231456';
+// Admin credentials (use environment variables on Render)
+const ADMIN_USER = process.env.ADMIN_USER || 'joydeepdutta855@gmail.com';
+const ADMIN_PASS = process.env.ADMIN_PASS || '231456joybuilds231456';
 const ADMIN_TOKEN = Buffer.from(`${ADMIN_USER}:${ADMIN_PASS}`).toString('base64');
 
 const toList = (value) => {
