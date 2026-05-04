@@ -1,7 +1,7 @@
 // ============ CONFIG ============
 const API_BASE = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:3001/api'
-  : 'https://buildclub-api.onrender.com/api';
+  : 'https://buildclub-backend-api.onrender.com/api';
 const ASSET_BASE = API_BASE.replace(/\/api$/, '');
 let SITE_CONTENT = {};
 let GALLERY_GROUPS = {};
